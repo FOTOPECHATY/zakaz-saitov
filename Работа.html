@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Заказ сайта</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0; padding: 0;
+      color: #333;
+    }
+    header, .contact, .order-form {
+      background: #1e88e5;
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+    }
+    section {
+      padding: 30px 20px;
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    h2 { color: #1e88e5; }
+    form input, form select, form textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    form button {
+      background: #1e88e5;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    form button:hover {
+      background: #1565c0;
+    }
+    .success {
+      color: green;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Создание сайтов под заказ</h1>
+  <p>Оставьте заявку — я свяжусь с вами в Telegram!</p>
+</header>
+
+<section class="order-form">
+  <h2>Форма заказа</h2>
+  <form id="orderForm">
+    <input type="text" name="name" placeholder="Ваше имя" required>
+    <input type="text" name="telegram" placeholder="Ваш Telegram (@username)" required>
+    <select name="type">
+      <option value="Сайт-визитка">Сайт-визитка</option>
+      <option value="Лендинг">Лендинг</option>
+      <option value="Портфолио">Портфолио</option>
+      <option value="Интернет-магазин">Интернет-магазин</option>
+      <option value="Другое">Другое</option>
+    </select>
+    <textarea name="message" rows="4" placeholder="Комментарий или пожелания..."></textarea>
+    <button type="submit">Отправить заявку</button>
+    <div class="success" id="successMessage"></div>
+  </form>
+</section>
+
+<script>
+  const TOKEN = '8050893291:AAECPCWHeTihjiIQoSZP0MAX8al4lccqxbo';
+  const CHAT_ID = '5693006618';
+
+  document.getElementById('orderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const name = this.name.value;
+    const telegram = this.telegram.value;
+    const type = this.type.value;
+    const message = this.message.value;
+
+    const text = `📝 Новый заказ с сайта:\n\n👤 Имя: ${name}\n💬 Telegram: ${telegram}\n📦 Тип сайта: ${type}\n📝 Комментарий: ${message}`;
+
+    fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: text
+      })
+    })
+    .then(res => {
+      if (res.ok) {
+        document.getElementById('successMessage').textContent = '✅ Заявка отправлена! Я скоро свяжусь с вами.';
+        document.getElementById('orderForm').reset();
+      } else {
+        alert('Ошибка отправки. Проверьте токен и chat_id.');
+      }
+    })
+    .catch(err => alert('Ошибка соединения: ' + err));
+  });
+</script>
+
+</body>
+</html>
